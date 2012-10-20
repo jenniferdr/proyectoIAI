@@ -20,4 +20,7 @@ Nodo* make_root(int8 estado[16]);
 Nodo* make_node(Nodo* padre,int8 estado[16]);
 std::list<Nodo*> extract_solution(Nodo* n);
 
+int h_static555(int8 estado[16]);
+void generarBD();
+
 #endif
