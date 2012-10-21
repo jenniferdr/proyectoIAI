@@ -35,7 +35,6 @@ std::list<Nodo*> extract_solution(Nodo* n){
     camino.push_front(n);
     n= n->predecesor;
   } 
-
 }
 
 int heuristica(Nodo* n){
@@ -84,8 +83,51 @@ bool is_goal(Nodo* n){
 };
 
 std::list<int8*> obtenerMovimientos(Nodo* n){
-  // IMPLEMENTAR
-  return std::list<int8*>();
+  std::list<int8*> listMov;
+  int posCero;
+
+  //buscar posicion del cero
+  for(int i=0; i<16 ; i++){
+    if(n->estado[i]=0){
+      posCero=i;
+      break;
+    }
+  }
+
+  if(puedeMoverse(1,posCero)){
+    // Mover blanco a la derecha
+    int8 nuevoMov[16];
+    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    nuevoMov[posCero]= nuevoMov[posCero+1];
+    nuevoMov[posCero+1]=0;
+    listMov.push_front(nuevoMov);
+  }
+  if(puedeMoverse(-1,posCero)){
+    // Mover blanco a la izquierda
+    int8 nuevoMov[16];
+    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    nuevoMov[posCero]= nuevoMov[posCero-1];
+    nuevoMov[posCero-1]=0;
+    listMov.push_front(nuevoMov);
+  }
+  if(puedeMoverse(4,posCero)){
+    // Mover blanco para abajo
+    int8 nuevoMov[16];
+    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    nuevoMov[posCero]= nuevoMov[posCero+4];
+    nuevoMov[posCero+4]=0;
+    listMov.push_front(nuevoMov);
+  }
+  if(puedeMoverse(-4,posCero)){
+    // Mover blanco para arriba
+    int8 nuevoMov[16];
+    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    nuevoMov[posCero]= nuevoMov[posCero-4];
+    nuevoMov[posCero-4]=0;
+    listMov.push_front(nuevoMov);
+  }
+
+  return listMov;
 }
 
 std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
@@ -130,11 +172,3 @@ std::list<Nodo*> ida_manhattan(int8 estado[16]){
   return plan; 
 }
 
-
-
-
-
-
-int main(int argc,char *argv[]){
-  return 0;
-}
