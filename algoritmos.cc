@@ -35,18 +35,54 @@ std::list<Nodo*> extract_solution(Nodo* n){
 }
 
 int heuristica(Nodo* n){
-  // IMPLEMENTAR
-  return n->distancia;
+  return  heuristicaManhattan(n->estado);
 }
+
+int heuristicaManhattan(int8 estado[16]){
+  int sum;
+  int matrizH[16][16] = 
+    { {0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6},
+      {1, 0, 1, 2, 2, 1, 2, 3, 3, 2, 3, 4, 4, 3, 4, 5},
+      {2, 1, 0, 1, 3, 2, 1, 2, 4, 3, 2, 3, 5, 4, 3, 4},
+      {3, 2, 1, 0, 4, 3, 2, 1, 5, 4, 3, 2, 6, 5, 4, 3},
+      {1, 2, 3, 4, 0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5},
+      {2, 1, 2, 3, 1, 0, 1, 2, 2, 1, 2, 3, 3, 2, 3, 4},
+      {3, 2, 1, 2, 2, 1, 0, 1, 3, 2, 1, 2, 4, 3, 2, 3},
+      {4, 3, 2, 1, 3, 2, 1, 0, 4, 3, 2, 1, 5, 4, 3, 2},
+      {2, 3, 4, 5, 1, 2, 3, 4, 0, 1, 2, 3, 1, 2, 3, 4},
+      {3, 2, 3, 4, 2, 1, 2, 3, 1, 0, 1, 2, 2, 1, 2, 3},
+      {4, 3, 2, 3, 3, 2, 1, 2, 2, 1, 0, 1, 3, 2, 1, 2},
+      {5, 4, 3, 2, 4, 3, 2, 1, 3, 2, 1, 0, 4, 3, 2, 1},
+      {3, 4, 5, 6, 2, 3, 4, 5, 1, 2, 3, 4, 0, 1, 2, 3},
+      {4, 3, 4, 5, 3, 2, 3, 4, 2, 1, 2, 3, 1, 0, 1, 2},
+      {5, 4, 3, 4, 4, 3, 2, 3, 3, 2, 1, 2, 2, 1, 0, 1},
+      {6, 5, 4, 3, 5, 4, 3, 2, 4, 3, 2, 1, 3, 2, 1, 0}
+    };
+	  
+  for (int i = 0; i < 16; i++) {
+    sum= matrizH[i][estado[i]];
+  };	
+  return sum;
+}
+
+bool is_goal(Nodo* n){
+  bool r = true;
+  int matrizR[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+	
+  for (int i = 0; i<16; i++) {
+    if (matrizR[i]!=n->estado[i]){
+      r = false;
+      i =16;
+    } 
+  };
+	
+  return r;
+	
+};
 
 std::list<int8*> obtenerMovimientos(Nodo* n){
   // IMPLEMENTAR
   return NULL;
-}
-
-bool is_goal(n){
-  // IMPLEMENTAR comparar [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] con n->estado
-  return false;
 }
 
 Nodo* ida_manhattan(int8 estado[16]){
@@ -89,12 +125,10 @@ std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
   
 }
 
+
 //Variable global para el peso
-int peso;
+int peso=1;
 
 int main(int argc,char *argv[]){
-  
-  // Sintaxis archivoTableros peso
- 
   return 0;
 }
