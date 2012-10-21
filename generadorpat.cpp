@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <queue>
 
 #include "algoritmos.hh"
@@ -64,7 +65,7 @@ unsigned char bd3[16*16*16*16*16*16];
  * Empaca las posiciones de las fichas distinguibles en un entero
  * para usarlas de índice en la BD.
  */
-long long int compactar(char estado[16], bool set[16]) {
+int compactar(char estado[16], bool set[16]) {
 
   /*  for (int i = 0; i< 16; i++) {
     std::cout << (int) estado[i]<<"  ";
@@ -119,7 +120,7 @@ struct NodoPat {
   char posicion_cero;
 };
 
-int movs[4] = {-4,-1,1,4};
+
 
 void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
 
@@ -136,6 +137,8 @@ void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
   cola.push(nodo_inicial);
 
   int nodos_expandidos = 0;
+
+  int movs[4] = {-4,-1,1,4};
 
   while (!cola.empty()) {
     NodoPat* nodo = cola.front();
@@ -162,6 +165,10 @@ void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
 
 	  bd[compactar(temp, set)] = hijo->movimientos;
 	  cola.push(hijo);
+	} else {
+	  unsigned char val1 = bd[compactar(temp, set)];
+	  unsigned char val2 = nodo->movimientos + (ficha != -1 ? 1 : 0);
+	  bd[compactar(temp, set)] = val1 < val2 ? val1 : val2;
 	}
       }
 
@@ -178,11 +185,47 @@ void generarBD() {
     bd3[i] = 255;
   }
 
-  llenarBDPat(set1, estado_inicial1, bd1);
-  llenarBDPat(set2, estado_inicial2, bd2);
-  llenarBDPat(set3, estado_inicial3, bd3);
+  std::ifstream entrada("patrones.bd", std::ios::in | std::ios::binary);
+  if (!entrada) {
+    std::cout << "No existe la base de datos de patrones, se generará" << std::endl;
+    llenarBDPat(set1, estado_inicial1, bd1);
+    llenarBDPat(set2, estado_inicial2, bd2);
+    llenarBDPat(set3, estado_inicial3, bd3);
+
+    std::ofstream salida;
+    salida.open("patrones.bd", std::ios::out | std::ios::binary);
+    salida.write((char*) bd1, 16*16*16*16*16*16*sizeof(unsigned char));
+    salida.write((char*) bd2, 16*16*16*16*16*16*sizeof(unsigned char));
+    salida.write((char*) bd3, 16*16*16*16*16*16*sizeof(unsigned char));
+    salida.close();
+
+  } else {
+    entrada.read((char*) bd1, 16*16*16*16*16*16*sizeof(unsigned char));
+    entrada.read((char*) bd2, 16*16*16*16*16*16*sizeof(unsigned char));
+    entrada.read((char*) bd3, 16*16*16*16*16*16*sizeof(unsigned char));
+    entrada.close();
+  }
 }
 
 int h_static555(int8 estado[16]) {
   return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
+}
+
+int main() {
+  generarBD();
+
+  int8 puzzle[16] = { 1, 2, 3, 7,
+		      4, 5, 6, 0,
+		      8, 9, 10, 11,
+		      12, 13, 14, 15};
+
+  int8 puzzle2[16] =
+    { 7, 15, 8, 2,
+      13, 6, 3, 12,
+      11, 0, 4, 10,
+      9, 5, 1, 14};
+
+  std::cout << "H: " << h_static555(puzzle2) << std::endl;
+
+  Nodo* res = a_static555(puzzle2, 1);
 }

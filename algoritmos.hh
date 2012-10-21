@@ -11,6 +11,7 @@ struct Nodo{
   int distancia;
   int heuristica;
   Nodo* predecesor;
+  char posicion_cero;
 };
 
 
@@ -22,5 +23,6 @@ std::list<Nodo*> extract_solution(Nodo* n);
 
 int h_static555(int8 estado[16]);
 void generarBD();
+Nodo* a_static555(int8 inicial[16], int peso);
 
 #endif
