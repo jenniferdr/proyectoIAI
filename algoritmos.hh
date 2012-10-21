@@ -35,7 +35,7 @@ Nodo* make_node(Nodo* padre,int8 estado[16]);
 std::list<Nodo*> extract_solution(Nodo* n);
 int heuristicaManhattan(int8 estado[16]);
 bool is_goal(Nodo* n);
-
+bool puedeMoverse(int dist, int posicion_cero);
 
 
 #endif

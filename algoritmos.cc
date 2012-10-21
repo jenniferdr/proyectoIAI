@@ -1,6 +1,7 @@
 #include "algoritmos.hh"
 #include <stdio.h>
 #include <algorithm>
+#include <cstring>
 
 //Variable global para el peso
 int peso=1;
