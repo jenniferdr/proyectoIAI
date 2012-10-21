@@ -34,7 +34,67 @@ std::list<Nodo*> extract_solution(Nodo* n){
 
 }
 
-int main(){
-  // main dummy para poder compilar 
+int heuristica(Nodo* n){
+  // IMPLEMENTAR
+  return n->distancia;
+}
+
+std::list<int8*> obtenerMovimientos(Nodo* n){
+  // IMPLEMENTAR
+  return NULL;
+}
+
+bool is_goal(n){
+  // IMPLEMENTAR comparar [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] con n->estado
+  return false;
+}
+
+Nodo* ida_manhattan(int8 estado[16]){
+  Nodo* n= make_root(estado);
+  int t= heuristica(n)*peso;
+  std::list<Nodo*> plan= NULL;
+  std::pair<std::list<Nodo*>,int> par;
+
+  while(plan==NULL and t<1000){
+    par= DFS_acotado(n,t);
+    t= par.second;
+    plan= par.first;
+  }
+  return par; 
+}
+
+std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
+  
+  if((n->distancia)+ peso*(n->heuristica) > t ){
+    return std::pair<std::list<Nodo*>,int>
+      (NULL,(n->distancia)+peso*(n->heuristica));
+  }
+  if(is_goal(n)){
+    return std::pair<std::list<Nodo*>,int>((extract_solution(n)),n->distancia);
+  }
+  int nueva_t= 1000;
+
+  // Sucesores del estado n
+  list<int8*> movimientos= obtenerMovimientos(n);
+
+  for(std::list<int8*>::iterator it= movimientos.begin(); 
+      it!=movimientos.end(); it++){
+    int8 *movimiento=(*it);
+    Node *n2= make_node(n,movimiento);
+    std::pair<std::list<Nodo*>,int> par= DFS_acotado(n2,t);
+    if (par.first!= NULL) return par;
+    nueva_t= min(nueva_t,par.second);
+  }
+  return std::pair<std::list<Nodo*>,int>(NULL,nueva_t);
+  
+}
+
+//Variable global para el peso
+int peso;
+
+int main(int argc,char *argv[]){
+  
+  // Sintaxis archivoTableros peso
+ 
   return 0;
 }
