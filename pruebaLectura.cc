@@ -30,6 +30,10 @@ int main(){
       estado[i]= atoi(tile);
       std::cout << estado[i] << std::endl;
     }
+
+    std::list<Nodo*> resuelto= ida_manhattan(estado);
+    std::cout << "Listo el primero" << std::endl;
+    
     
   }
  

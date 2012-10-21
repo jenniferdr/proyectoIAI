@@ -20,7 +20,7 @@ Nodo* a_static55_M(int8 estado[16], int peso);
 Nodo* a_static555(int8 estado[16], int peso);
 
 // IDA*
-Nodo* ida_manhattan(int8 estado[16], int peso);
+std::list<Nodo*> ida_manhattan(int8 estado[16]);
 
 // Heurísticas
 int heuristica(Nodo* n);
