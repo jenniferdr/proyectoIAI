@@ -7,8 +7,8 @@ typedef char int8;
 
 struct Nodo{
   int8 estado[16];
-  int distancia;
-  int heuristica;
+  int8 distancia;
+  int8 heuristica;
   Nodo* predecesor;
   char posicion_cero;
 };

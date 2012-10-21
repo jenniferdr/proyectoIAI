@@ -5,7 +5,7 @@
 #include<fstream>
 #include<sstream>
 
-
+/*
 int main(){
   // FALTA hacer las validaciones necesarias 
   // Y leer de la linea de comandos el nombre del archivo y peso
@@ -34,4 +34,4 @@ int main(){
   }
  
   return 0;
-}
+  }*/
