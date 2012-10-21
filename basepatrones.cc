@@ -211,6 +211,15 @@ int h_static555(int8 estado[16]) {
   return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
 }
 
+int h_static55_M(int8 estado[16]) {
+  return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
+}
+
+int h_static5_M(int8 estado[16]) {
+  return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
+}
+
+/*
 int main() {
   generarBD();
 
@@ -225,7 +234,13 @@ int main() {
       11, 0, 4, 10,
       9, 5, 1, 14};
 
-  std::cout << "H: " << h_static555(puzzle2) << std::endl;
+  int8 puzzle3[16] =
+    { 4, 7, 14, 13, 10, 3, 9, 12, 11, 5, 6, 15, 1, 2, 8, 0 };
 
-  Nodo* res = a_static555(puzzle2, 1);
-}
+  int8 puzzle4[16] =
+    { 14, 7, 8, 2, 13, 11, 10, 4, 9, 12, 5, 0, 3, 6, 1, 15};
+
+  std::cout << "H: " << h_static555(puzzle4) << std::endl;
+
+  Nodo* res = a_static555(puzzle4, 1);
+  }*/
