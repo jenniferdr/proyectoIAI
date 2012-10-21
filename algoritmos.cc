@@ -1,5 +1,9 @@
 #include "algoritmos.hh"
 #include <stdio.h>
+#include <algorithm>
+
+//Variable global para el peso
+int peso=1;
 
 Nodo* make_root(int8 estado[16]){
   Nodo* n= new Nodo();
@@ -76,34 +80,20 @@ bool is_goal(Nodo* n){
     } 
   };
 	
-  return r;
-	
+  return r;	
 };
 
 std::list<int8*> obtenerMovimientos(Nodo* n){
   // IMPLEMENTAR
-  return NULL;
-}
-
-Nodo* ida_manhattan(int8 estado[16]){
-  Nodo* n= make_root(estado);
-  int t= heuristica(n)*peso;
-  std::list<Nodo*> plan= NULL;
-  std::pair<std::list<Nodo*>,int> par;
-
-  while(plan==NULL and t<1000){
-    par= DFS_acotado(n,t);
-    t= par.second;
-    plan= par.first;
-  }
-  return par; 
+  return std::list<int8*>();
 }
 
 std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
   
   if((n->distancia)+ peso*(n->heuristica) > t ){
+    std::list<Nodo*> empty;
     return std::pair<std::list<Nodo*>,int>
-      (NULL,(n->distancia)+peso*(n->heuristica));
+      (empty,(n->distancia)+peso*(n->heuristica));
   }
   if(is_goal(n)){
     return std::pair<std::list<Nodo*>,int>((extract_solution(n)),n->distancia);
@@ -111,23 +101,39 @@ std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
   int nueva_t= 1000;
 
   // Sucesores del estado n
-  list<int8*> movimientos= obtenerMovimientos(n);
+  std::list<int8*> movimientos= obtenerMovimientos(n);
 
   for(std::list<int8*>::iterator it= movimientos.begin(); 
       it!=movimientos.end(); it++){
     int8 *movimiento=(*it);
-    Node *n2= make_node(n,movimiento);
+    Nodo *n2= make_node(n,movimiento);
     std::pair<std::list<Nodo*>,int> par= DFS_acotado(n2,t);
-    if (par.first!= NULL) return par;
-    nueva_t= min(nueva_t,par.second);
+    if (par.first.size()!=0) return par;
+    nueva_t= std::min(nueva_t,par.second);
   }
-  return std::pair<std::list<Nodo*>,int>(NULL,nueva_t);
+  return std::pair<std::list<Nodo*>,int>(std::list<Nodo*>(),nueva_t);
   
 }
 
 
-//Variable global para el peso
-int peso=1;
+std::list<Nodo*> ida_manhattan(int8 estado[16]){
+  Nodo* n= make_root(estado);
+  int t= heuristica(n)*peso;
+  std::list<Nodo*> plan;
+  std::pair<std::list<Nodo*>,int> par;
+
+  while(plan.size()<=0 and t<1000){
+    par= DFS_acotado(n,t);
+    t= par.second;
+    plan= par.first;
+  }
+  return plan; 
+}
+
+
+
+
+
 
 int main(int argc,char *argv[]){
   return 0;
