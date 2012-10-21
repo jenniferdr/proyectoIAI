@@ -6,7 +6,6 @@
 typedef char int8;
 
 struct Nodo{
-
   int8 estado[16];
   int distancia;
   int heuristica;
@@ -14,18 +13,29 @@ struct Nodo{
   char posicion_cero;
 };
 
+// A*
+Nodo* a_manhattan(int8 estado[16], int peso);
+Nodo* a_static5_M(int8 estado[16], int peso);
+Nodo* a_static55_M(int8 estado[16], int peso);
+Nodo* a_static555(int8 estado[16], int peso);
 
-Nodo* a_manhattan(int peso);
-Nodo* ida_manhattan(int8 estado[16],int peso);
+// IDA*
+Nodo* ida_manhattan(int8 estado[16], int peso);
+
+// Heurísticas
+int heuristica(Nodo* n);
+int h_static555(int8 estado[16]);
+int h_static55_M(int8 estado[16]);
+int h_static5_M(int8 estado[16]);
+void generarBD();
+
+// Util
 Nodo* make_root(int8 estado[16]);
 Nodo* make_node(Nodo* padre,int8 estado[16]);
 std::list<Nodo*> extract_solution(Nodo* n);
 int heuristicaManhattan(int8 estado[16]);
 bool is_goal(Nodo* n);
-int heuristica(Nodo* n);
 
-int h_static555(int8 estado[16]);
-void generarBD();
-Nodo* a_static555(int8 inicial[16], int peso);
+
 
 #endif

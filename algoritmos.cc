@@ -129,12 +129,7 @@ std::list<Nodo*> ida_manhattan(int8 estado[16]){
   }
   return plan; 
 }
-
-
-
-
-
-
+/*
 int main(int argc,char *argv[]){
   return 0;
-}
+  }*/
