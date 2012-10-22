@@ -238,7 +238,7 @@ int h_static5_M(int8 estado[16]) {
   }
   return res;
 }
-
+/*
 int main() {
   generarBD();
 
@@ -264,3 +264,4 @@ int main() {
   Nodo* res = a_static555(puzzle4, 1);
   extract_solution(res);
 }
+*/

@@ -147,6 +147,10 @@ std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
       (empty,(n->distancia)+peso*(heuristica(n)));
   }
   if(is_goal(n)){
+    for(int i=0; i<16 ;i++){
+      std::cout << (int) n->estado[i] << " ";
+    }
+    //std::cout << "estado del nodo goal  \n";
     return std::pair<std::list<Nodo*>,int>((extract_solution(n)),n->distancia);
   }
   int nueva_t= 1000;

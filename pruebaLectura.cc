@@ -5,7 +5,7 @@
 #include<fstream>
 #include<sstream>
 
-/*
+
 int main(){
   // FALTA hacer las validaciones necesarias 
   // Y leer de la linea de comandos el nombre del archivo y peso
@@ -19,7 +19,7 @@ int main(){
   char linea[40];
 
   while(archivo.getline(linea,40)){
-    std::cout << linea << std::endl;
+    std::cout << linea << " : ";
 
     char estado[16];
     
@@ -28,14 +28,18 @@ int main(){
       char tile[3];
       stream >> tile;
       estado[i]= atoi(tile);
-      std::cout << estado[i] << std::endl;
     }
 
     std::list<Nodo*> resuelto= ida_manhattan(estado);
-    std::cout << "Listo el primero" << std::endl;
+    /*
+    for(int i=0; i<16 ;i++){
+      int a = (int)(resuelto.front())->estado[i];
+      std::cout << a << " ";
+      }*/
+    std::cout << "\n --- \n";
     
     
   }
  
   return 0;
-  }*/
+}
