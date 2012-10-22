@@ -38,7 +38,7 @@ int main(){
       int a = (int)(resuelto.back())->estado[i];
       std::cout << a << " ";
     }
-    std::cout << "\n --- \n";
+    std::cout << "\n --- \n" << std::endl;
     
     
   }

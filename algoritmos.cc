@@ -43,8 +43,7 @@ int heuristica(Nodo* n){
 }
 
 int matrizH[16][16] = 
-  { {0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6},
-    {1, 0, 1, 2, 2, 1, 2, 3, 3, 2, 3, 4, 4, 3, 4, 5},
+  { {1, 0, 1, 2, 2, 1, 2, 3, 3, 2, 3, 4, 4, 3, 4, 5},
     {2, 1, 0, 1, 3, 2, 1, 2, 4, 3, 2, 3, 5, 4, 3, 4},
     {3, 2, 1, 0, 4, 3, 2, 1, 5, 4, 3, 2, 6, 5, 4, 3},
     {1, 2, 3, 4, 0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5},
@@ -63,8 +62,8 @@ int matrizH[16][16] =
 
 int heuristicaManhattan(int8 estado[16]){
   int sum = 0;
-  for (int i = 0; i < 16; i++) {
-    sum= sum + matrizH[i][estado[i]];
+  for (int i = 0; i < 15; i++) {
+    sum= sum + matrizH[i][estado[i+1]];
   };
   return sum;
 }
