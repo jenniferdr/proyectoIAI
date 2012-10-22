@@ -6,6 +6,7 @@
 
 //Variable global para el peso
 int peso=1;
+int num_nodos;
 
 Nodo* make_root(int8 estado[16]){
   Nodo* n= new Nodo();
@@ -32,7 +33,6 @@ Nodo* make_node(Nodo* padre,int8 estado[16]){
 }
 
 std::list<Nodo*> extract_solution(Nodo* n){
-  std::cout << "Pasos para solucionar: " << (int) n->distancia << std::endl;
   std::list<Nodo*> camino;
   while(n!= NULL){
     /*for (int i = 0; i < 16; i++) {
@@ -91,8 +91,21 @@ bool is_goal(Nodo* n){
   return r;	
 };
 
-std::list<int8*> obtenerMovimientos(Nodo* n){
-  std::list<int8*> listMov;
+
+std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
+  
+  if((n->distancia)+ peso*(heuristica(n)) > t ){
+    std::list<Nodo*> empty;
+    return std::pair<std::list<Nodo*>,int>
+      (empty,(n->distancia)+peso*(heuristica(n)));
+  }
+  if(is_goal(n)){
+    return std::pair<std::list<Nodo*>,int>((extract_solution(n)),n->distancia);
+  }
+  int nueva_t= 1000;
+
+  // Sucesores del estado n
+  std::list<int8> listMov;
   int posCero;
 
   //buscar posicion del cero
@@ -103,79 +116,27 @@ std::list<int8*> obtenerMovimientos(Nodo* n){
     }
   }
 
-  if(puedeMoverse(1,posCero)){
-    // Mover blanco a la derecha
-    int8 nuevoMov[16];
-    std::cout << "Movimiento Anterior: ";
-    for(int i=0; i<16 ;i++){
-      std::cout << (int) n->estado[i] << " ";
-    }
-    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
-    nuevoMov[posCero]= nuevoMov[posCero+1];
-    nuevoMov[posCero+1]=0;
-    listMov.push_front(nuevoMov);
-    std::cout << std::endl << "Nuevo movimiento: ";
-    for(int i=0; i<16 ;i++){
-      std::cout << (int) nuevoMov[i] << " ";
-    }
-  }
-  if(puedeMoverse(-1,posCero)){
-    // Mover blanco a la izquierda
-    int8 nuevoMov[16];
-    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
-    nuevoMov[posCero]= nuevoMov[posCero-1];
-    nuevoMov[posCero-1]=0;
-    listMov.push_front(nuevoMov);
-  }
-  if(puedeMoverse(4,posCero)){
-    // Mover blanco para abajo
-    int8 nuevoMov[16];
-    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
-    nuevoMov[posCero]= nuevoMov[posCero+4];
-    nuevoMov[posCero+4]=0;
-    listMov.push_front(nuevoMov);
-  }
-  if(puedeMoverse(-4,posCero)){
-    // Mover blanco para arriba
-    int8 nuevoMov[16];
-    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
-    nuevoMov[posCero]= nuevoMov[posCero-4];
-    nuevoMov[posCero-4]=0;
-    listMov.push_front(nuevoMov);
-  }
-
-  return listMov;
-}
-
-std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
+  if(puedeMoverse(1,posCero)) listMov.push_front(1);
+  if(puedeMoverse(-1,posCero)) listMov.push_front(-1);
+  if(puedeMoverse(4,posCero)) listMov.push_front(4);
+  if(puedeMoverse(-4,posCero)) listMov.push_front(-4);
   
-  if((n->distancia)+ peso*(heuristica(n)) > t ){
-    std::list<Nodo*> empty;
-    std::cout << " heuristica" << heuristica(n) << " g+n ";
-    std::cout << (n->distancia)+ peso*heuristica(n);
-    return std::pair<std::list<Nodo*>,int>
-      (empty,(n->distancia)+peso*(heuristica(n)));
-  }
-  if(is_goal(n)){
-    for(int i=0; i<16 ;i++){
-      std::cout << (int) n->estado[i] << " ";
-    }
-    //std::cout << "estado del nodo goal  \n";
-    return std::pair<std::list<Nodo*>,int>((extract_solution(n)),n->distancia);
-  }
-  int nueva_t= 1000;
+  for(std::list<int8>::iterator it= listMov.begin(); 
+      it!=listMov.end(); it++){
+    num_nodos++;
+    //std::cout << num_nodos << "\n";
+    int8 movimiento=(*it);
+    int8 nuevoEstado[16];
+    // Generar el nuevo estado
+    memcpy(nuevoEstado,n->estado,sizeof(int8)*16);
+    nuevoEstado[posCero]= nuevoEstado[posCero+movimiento];
+    nuevoEstado[posCero+movimiento]=0;
 
-  // Sucesores del estado n
-  std::list<int8*> movimientos= obtenerMovimientos(n);
-
-  for(std::list<int8*>::iterator it= movimientos.begin(); 
-      it!=movimientos.end(); it++){
-    int8 *movimiento=(*it);
-    Nodo *n2= make_node(n,movimiento);
+    Nodo *n2= make_node(n,nuevoEstado);
+    
     std::pair<std::list<Nodo*>,int> par= DFS_acotado(n2,t);
     if (par.first.size()!=0) return par;
     nueva_t= std::min(nueva_t,par.second);
-    std::cout << "cota minima " << par.second ;
   }
   return std::pair<std::list<Nodo*>,int>(std::list<Nodo*>(),nueva_t);
   
@@ -187,13 +148,15 @@ std::list<Nodo*> ida_manhattan(int8 estado[16]){
   int t= heuristica(n)*peso;
   std::list<Nodo*> plan;
   std::pair<std::list<Nodo*>,int> par;
+  num_nodos=0;
 
   while(plan.size()<=0 and t<1000){
     par= DFS_acotado(n,t);
     t= par.second;
-    std::cout << "cota " << t;
+    std::cout << " " << t;
     plan= par.first;
   }
+  std::cout <<" "<< num_nodos;
   return plan;
 }
 

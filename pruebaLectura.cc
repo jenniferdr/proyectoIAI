@@ -31,11 +31,13 @@ int main(){
     }
 
     std::list<Nodo*> resuelto= ida_manhattan(estado);
-    /*
+    std::cout << " " << (int) resuelto.back()->distancia;
+
+    std::cout << std::endl << "Solucion" << std::endl;
     for(int i=0; i<16 ;i++){
-      int a = (int)(resuelto.front())->estado[i];
+      int a = (int)(resuelto.back())->estado[i];
       std::cout << a << " ";
-      }*/
+    }
     std::cout << "\n --- \n";
     
     
