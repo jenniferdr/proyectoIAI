@@ -73,7 +73,7 @@ int heuristicaManhattan(int8 estado[16]){
   int sum = 0;
   for (int i = 0; i < 16; i++) {
     sum= sum + matrizH[i][estado[i]];
-  };	
+  };
   return sum;
 }
 
@@ -97,7 +97,7 @@ std::list<int8*> obtenerMovimientos(Nodo* n){
 
   //buscar posicion del cero
   for(int i=0; i<16 ; i++){
-    if(n->estado[i]=0){
+    if(n->estado[i]==0){
       posCero=i;
       break;
     }
@@ -106,15 +106,23 @@ std::list<int8*> obtenerMovimientos(Nodo* n){
   if(puedeMoverse(1,posCero)){
     // Mover blanco a la derecha
     int8 nuevoMov[16];
-    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    std::cout << "Movimiento Anterior: ";
+    for(int i=0; i<16 ;i++){
+      std::cout << (int) n->estado[i] << " ";
+    }
+    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
     nuevoMov[posCero]= nuevoMov[posCero+1];
     nuevoMov[posCero+1]=0;
     listMov.push_front(nuevoMov);
+    std::cout << std::endl << "Nuevo movimiento: ";
+    for(int i=0; i<16 ;i++){
+      std::cout << (int) nuevoMov[i] << " ";
+    }
   }
   if(puedeMoverse(-1,posCero)){
     // Mover blanco a la izquierda
     int8 nuevoMov[16];
-    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
     nuevoMov[posCero]= nuevoMov[posCero-1];
     nuevoMov[posCero-1]=0;
     listMov.push_front(nuevoMov);
@@ -122,7 +130,7 @@ std::list<int8*> obtenerMovimientos(Nodo* n){
   if(puedeMoverse(4,posCero)){
     // Mover blanco para abajo
     int8 nuevoMov[16];
-    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
     nuevoMov[posCero]= nuevoMov[posCero+4];
     nuevoMov[posCero+4]=0;
     listMov.push_front(nuevoMov);
@@ -130,7 +138,7 @@ std::list<int8*> obtenerMovimientos(Nodo* n){
   if(puedeMoverse(-4,posCero)){
     // Mover blanco para arriba
     int8 nuevoMov[16];
-    memcpy(nuevoMov,&(n->estado),sizeof(int8)*16);
+    memcpy(nuevoMov,n->estado,sizeof(int8)*16);
     nuevoMov[posCero]= nuevoMov[posCero-4];
     nuevoMov[posCero-4]=0;
     listMov.push_front(nuevoMov);
@@ -143,6 +151,8 @@ std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
   
   if((n->distancia)+ peso*(heuristica(n)) > t ){
     std::list<Nodo*> empty;
+    std::cout << " heuristica" << heuristica(n) << " g+n ";
+    std::cout << (n->distancia)+ peso*heuristica(n);
     return std::pair<std::list<Nodo*>,int>
       (empty,(n->distancia)+peso*(heuristica(n)));
   }
@@ -165,6 +175,7 @@ std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
     std::pair<std::list<Nodo*>,int> par= DFS_acotado(n2,t);
     if (par.first.size()!=0) return par;
     nueva_t= std::min(nueva_t,par.second);
+    std::cout << "cota minima " << par.second ;
   }
   return std::pair<std::list<Nodo*>,int>(std::list<Nodo*>(),nueva_t);
   
@@ -180,9 +191,10 @@ std::list<Nodo*> ida_manhattan(int8 estado[16]){
   while(plan.size()<=0 and t<1000){
     par= DFS_acotado(n,t);
     t= par.second;
+    std::cout << "cota " << t;
     plan= par.first;
   }
-  return plan; 
+  return plan;
 }
 
 /*
