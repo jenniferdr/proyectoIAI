@@ -133,10 +133,10 @@ std::list<int8*> obtenerMovimientos(Nodo* n){
 
 std::pair<std::list<Nodo*>,int> DFS_acotado(Nodo* n,int t){
   
-  if((n->distancia)+ peso*(n->heuristica) > t ){
+  if((n->distancia)+ peso*(heuristica(n)) > t ){
     std::list<Nodo*> empty;
     return std::pair<std::list<Nodo*>,int>
-      (empty,(n->distancia)+peso*(n->heuristica));
+      (empty,(n->distancia)+peso*(heuristica(n)));
   }
   if(is_goal(n)){
     return std::pair<std::list<Nodo*>,int>((extract_solution(n)),n->distancia);
