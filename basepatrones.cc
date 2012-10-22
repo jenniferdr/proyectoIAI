@@ -207,19 +207,38 @@ void generarBD() {
   }
 }
 
+extern int matrizH[16][16];
+
 int h_static555(int8 estado[16]) {
   return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
 }
 
 int h_static55_M(int8 estado[16]) {
-  return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
+  int res = bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)];
+  for (int i = 0; i < 16; i++) {
+    if (!set3[i]) continue;
+    for (int j = 0; j < 16; j++) {
+      if (estado[j] == i) {
+	res += matrizH[i][j];
+      }
+    }
+  }
+  return res;
 }
 
 int h_static5_M(int8 estado[16]) {
-  return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
+  int res = bd1[compactar(estado, set1)];
+  for (int i = 0; i < 16; i++) {
+    if (set1[i]) continue;
+    for (int j = 0; j < 16; j++) {
+      if (estado[j] == i) {
+	res += matrizH[i][j];
+      }
+    }
+  }
+  return res;
 }
 
-/*
 int main() {
   generarBD();
 
@@ -243,4 +262,5 @@ int main() {
   std::cout << "H: " << h_static555(puzzle4) << std::endl;
 
   Nodo* res = a_static555(puzzle4, 1);
-  }*/
+  extract_solution(res);
+}
