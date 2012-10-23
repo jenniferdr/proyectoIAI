@@ -39,8 +39,6 @@ int main(){
       std::cout << a << " ";
     }
     std::cout << "\n --- \n" << std::endl;
-    
-    
   }
  
   return 0;
