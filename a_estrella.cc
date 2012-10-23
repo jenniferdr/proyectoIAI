@@ -71,6 +71,7 @@ Nodo* a_estrella(int8 inicial[16], int peso, int (*h)(int8 inicial[16])) {
 
     if ( is_goal(nodo) ) {
       std::cout << "Nodos expandidos: " << nodos_expandidos << std::endl;
+      std::cout << "Distancia: " << (int) nodo->distancia << std::endl;
       return nodo;
     }
 

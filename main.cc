@@ -10,6 +10,7 @@ int main(){
   // FALTA hacer las validaciones necesarias 
   // Y leer de la linea de comandos el nombre del archivo y peso
 
+  generarBD();
   std::ifstream archivo("prueba.txt");
   
   if(!archivo){
@@ -39,6 +40,8 @@ int main(){
       std::cout << a << " ";
     }
     std::cout << "\n --- \n" << std::endl;
+    /*    Nodo* res = a_static555(estado, 1);
+	  extract_solution(res);*/
   }
  
   return 0;
