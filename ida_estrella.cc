@@ -59,9 +59,7 @@ std::pair<Nodo*,int> DFS_acotado(int nodo,int t){
     if (par.first!=NULL) return par;
     nueva_t= std::min(nueva_t,par.second);
   }
-    
   return std::pair<Nodo*,int>(NULL,nueva_t);
-  
 }
 
 
