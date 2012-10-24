@@ -38,6 +38,8 @@ int main(int argc, char *argv[]){
     std::cout << "Ha fallado la lectura" << std::endl;
     return -1;
   }
+  generarBD();
+  generarTabla();
   char linea[40];
 
   while(archivo.getline(linea,40)){
@@ -68,6 +70,8 @@ int main(int argc, char *argv[]){
     }
 
     std::cout << "\n --- \n" << std::endl;
+    /*    Nodo* res = a_static555(estado, 1);
+	  extract_solution(res);*/
   }
  
   return 0;

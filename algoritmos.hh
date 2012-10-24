@@ -18,13 +18,14 @@ Nodo* a_manhattan(int8 estado[16], int peso);
 Nodo* a_static5_M(int8 estado[16], int peso);
 Nodo* a_static55_M(int8 estado[16], int peso);
 Nodo* a_static555(int8 estado[16], int peso);
+Nodo* a_conflictos(int8 estado[16], int peso);
 
 // IDA*
 std::list<Nodo*> ida_manhattan(int8 estado[16]);
 
 
 // Heurísticas
-int heuristica(Nodo* n);
+int8 heuristica(Nodo* n);
 int h_static555(int8 estado[16]);
 int h_static55_M(int8 estado[16]);
 int h_static5_M(int8 estado[16]);
@@ -38,5 +39,7 @@ int heuristicaManhattan(int8 estado[16]);
 bool is_goal(Nodo* n);
 bool puedeMoverse(int dist, int posicion_cero);
 
+void generarTabla();
+int h_conflictos(int8 estado[16]);
 
 #endif
