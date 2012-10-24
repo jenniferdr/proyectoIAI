@@ -39,7 +39,7 @@ std::list<Nodo*> extract_solution(Nodo* n){
 }
 
 int8 heuristica(Nodo* n){
-  return (int8) heuristicaManhattan(n->estado);
+  return (int8) h_conflictos(n->estado);
 }
 
 int8 matrizH[16][16] =

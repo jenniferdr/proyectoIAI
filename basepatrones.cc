@@ -161,13 +161,13 @@ void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
 	  NodoPat* hijo = new NodoPat();
 	  memcpy(&(hijo->estado), &temp, 16*sizeof(int8));
 	  hijo->posicion_cero = nodo->posicion_cero + movs[i];
-	  hijo->movimientos = nodo->movimientos + (ficha != -1 ? 1 : 0);
+	  hijo->movimientos = nodo->movimientos + (ficha > 0 ? 1 : 0);
 
 	  bd[compactar(temp, set)] = hijo->movimientos;
 	  cola.push(hijo);
 	} else {
 	  unsigned char val1 = bd[compactar(temp, set)];
-	  unsigned char val2 = nodo->movimientos + (ficha != -1 ? 1 : 0);
+	  unsigned char val2 = nodo->movimientos + (ficha > 0 ? 1 : 0);
 	  bd[compactar(temp, set)] = val1 < val2 ? val1 : val2;
 	}
       }

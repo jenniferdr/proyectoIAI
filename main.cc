@@ -11,6 +11,7 @@ int main(){
   // Y leer de la linea de comandos el nombre del archivo y peso
 
   generarBD();
+  generarTabla();
   std::ifstream archivo("prueba.txt");
   
   if(!archivo){

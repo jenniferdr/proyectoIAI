@@ -37,5 +37,7 @@ int heuristicaManhattan(int8 estado[16]);
 bool is_goal(Nodo* n);
 bool puedeMoverse(int dist, int posicion_cero);
 
+void generarTabla();
+int h_conflictos(int8 estado[16]);
 
 #endif
