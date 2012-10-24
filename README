@@ -1,0 +1,34 @@
+Problema: 15-puzzle
+
+Integrantes:
+
+Dos Reis Jennifer
+Goncalves Jose Alberto
+Muñiz Javier Alexander
+
+Este proyecto se puede compilar haciendo uso del Makefile.
+
+Para ejecutar se debe introducir el siguiente comando:
+
+15puzzle <algoritmo> <heuristica> <peso> <archivo_estados_ini>
+
+Para la opcion de algoritmos se tienen los siguientes:
+- a_estrella 
+- ida_estrella
+
+Para la opcion de heuristicas:
+- manhattan    (Heuristica de manhattan)
+- Mconflictos  (Heuristica de Manhattan con conflictos lineales)
+- static555    (Heuristica con base de datos de patrones disjuntas)
+
+El peso debe ser un numero entero mayor a cero
+
+El archivo_estados_ini se refiere a un archivo que por cada linea posee 
+una configuracion del tablero del 15-puzzle, ejemplo:
+
+3 6 5 2 10 0 15 14 1 4 13 12 9 8 11 7 
+7 6 8 1 11 5 14 10 3 4 9 13 15 2 0 12 
+13 11 4 12 1 8 9 15 6 5 14 2 7 3 10 0 
+1 3 2 5 10 9 15 6 8 14 13 11 12 4 7 0 
+15 14 0 4 11 1 6 13 7 5 8 9 3 2 10 12 
+6 0 14 12 1 15 9 10 11 4 7 2 8 3 5 13  

@@ -72,6 +72,7 @@ std::list<Nodo*> ida_estrella(int8 estado[16], int (*h)(int8 inicial[16])){
   nodos[0].distancia = 0;
   nodos[0].predecesor = NULL;
 
+  // (*h) es la funcion heuristica
   int t = (*h)((&nodos[0])->estado)*peso;
   Nodo* solucion;
   std::pair<Nodo*,int> par;
