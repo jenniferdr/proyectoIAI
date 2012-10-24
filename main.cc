@@ -6,11 +6,33 @@
 #include<sstream>
 
 
-int main(){
-  // FALTA hacer las validaciones necesarias 
-  // Y leer de la linea de comandos el nombre del archivo y peso
+int main(int argc, char *argv[]){
 
-  std::ifstream archivo("prueba.txt");
+  if(argc!=5){
+    std::cout << 
+      "Error. Sintaxis: <algoritmo> <heuristica> <peso(W)> <archivo_iniciales>";
+    std::cout << std::endl << "heuristica: manhattan, Mconflictos, static555 ";
+    std::cout << std::endl << "algoritmo: a_estrella ida_estrella" << std::endl;
+    return 1;
+  }
+  std::string algoritmo= std::string(argv[1]);
+  if(algoritmo!= "a_estrella" && algoritmo!= "ida_estrella"){
+    std::cout << "Error: algoritmo no valido";
+    return 1;
+  }
+  std::string heuristica= std::string(argv[2]);
+  if(heuristica!= "manhattan" && heuristica!= "Mconflictos"
+     && heuristica!= "static555"){
+    std::cout << "Error: heuristica no valida";
+    return 1;
+  }
+  if(atoi(argv[3])<=0){
+    std::cout << "Error: el peso debe ser mayor o igual a 1";
+    return 1;
+  }
+  peso= atoi(argv[3]);
+  
+  std::ifstream archivo(argv[4]);
   
   if(!archivo){
     std::cout << "Ha fallado la lectura" << std::endl;
@@ -30,14 +52,21 @@ int main(){
       estado[i]= atoi(tile);
     }
 
-    std::list<Nodo*> resuelto= ida_manhattan(estado);
-    std::cout << " " << (int) resuelto.back()->distancia;
+    std::list<Nodo*> listaResuelto;
+    Nodo *nodoResuelto;
 
-    std::cout << std::endl << "Solucion" << std::endl;
-    for(int i=0; i<16 ;i++){
-      int a = (int)(resuelto.back())->estado[i];
-      std::cout << a << " ";
+    if(algoritmo=="a_estrella"){
+      if(heuristica=="manhattan") nodoResuelto= a_manhattan(estado,peso);
+      if(heuristica=="Mconflictos") nodoResuelto= a_conflictos(estado,peso);
+      if(heuristica=="static555") nodoResuelto= a_static555(estado,peso);
+    } 
+    if(algoritmo=="ida_estrella"){
+      if(heuristica=="manhattan") listaResuelto= ida_manhattan(estado);
+      if(heuristica=="Mconflictos") listaResuelto= ida_conflictos(estado);
+      if(heuristica=="static555") listaResuelto= ida_static555(estado);
+      std::cout << " " << (int) resuelto.back()->distancia;
     }
+
     std::cout << "\n --- \n" << std::endl;
   }
  
