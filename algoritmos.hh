@@ -18,6 +18,7 @@ Nodo* a_manhattan(int8 estado[16], int peso);
 Nodo* a_static5_M(int8 estado[16], int peso);
 Nodo* a_static55_M(int8 estado[16], int peso);
 Nodo* a_static555(int8 estado[16], int peso);
+Nodo* a_conflictos(int8 estado[16], int peso);
 
 // IDA*
 std::list<Nodo*> ida_manhattan(int8 estado[16]);

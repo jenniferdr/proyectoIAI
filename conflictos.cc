@@ -2,8 +2,17 @@
 #include "algoritmos.hh"
 #include <iostream>
 
+/*
+ * Nuestra implementación de conflictos lineales se basa en una
+ * tabla de 4 dimensiones, las dos primeras representan el par
+ * de fichas a comparar, y las dos últimas representan la posición
+ * de estas fichas. Se precomputa para todas estas combinaciones
+ * si están en conflicto o no.
+ */
+
 int conflictos[16][16][16][16];
 
+// Llena la tabla con los valores de conflicto.
 void generarTabla() {
 
   memset(conflictos, 0, sizeof(int)*16*16*16*16);
@@ -78,6 +87,10 @@ void generarTabla() {
   }
 }
 
+/*
+ * Revisa cada fila pasando por cada par de fichas
+ * y buscando en la tabla de conflictos su valor asociado.
+ */
 int h_conflictos(int8 estado[16]) {
   int res = heuristicaManhattan(estado);
   for (int i = 0; i < 4; i++) {

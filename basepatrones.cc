@@ -5,12 +5,32 @@
 
 #include "algoritmos.hh"
 
-/*
- * Particiones del 15 puzzle. Cada número es un set.
- * 0 1 1 2 
- * 1 1 2 2
- * 1 3 2 2
- * 3 3 3 3
+/**
+ * Funciones para generar la base de datos de patrones disjunta
+ * y calcular la heurística basada en ella.
+ * Se particionó el puzzle en 3 conjuntos de 5 fichas cada una:
+ *
+ *    0 1 1 2
+ *    1 1 2 2
+ *    1 3 2 2
+ *    3 3 3 3
+ *
+ * Cada base de datos se representa como un arreglo de 6 dimensiones con
+ *  16 posiciones cada una. Para obtener la heurística dado un patrón,
+ * se indexa utilizando la posición de cada ficha relvante del patrón.
+ * Este esquema no es el más eficiente posible, pero las 3 bases de datos
+ * juntas ocupan 50 Mb, lo cual nos pareció un tamaño razonable.
+ *
+ * Las bases de datos se generan comenzando con el estado final del puzzle
+ * y luego utilizando BFS se desarma hasta obtener todas las configuraciones
+ * posibles. Cuando se consigue una configuración nueva, se guarda en la base
+ * de datos la distancia a la raíz, contando solo los pasos que involucren
+ * mover una ficha del conjunto relevante a esa base de datos.
+ *
+ * La heurística parece funcionar en a mayoría de las pruebas, sin embargo,
+ * existen algunos casos en los que sobreestima la distancia al goal. No
+ * se pudo determinar por qué, así que por ello no confiamos demasiado en
+ * nuestra implementación de esta heurística.
  */
 
 bool set1[16] = 
@@ -51,10 +71,6 @@ int8 estado_inicial3[16] =
 
 /*
  * Bases de datos de patrones
- * Son arreglos de 6 dimensiones. Cada dimensión es la posición de una
- * ficha distinguible (o el blanco) en el tablero.
- * Van haber muchas casillas sin utilizar. Eso mientras no se me ocurre
- * una mejor manera.
  */
 
 unsigned char bd1[16*16*16*16*16*16];
@@ -67,9 +83,6 @@ unsigned char bd3[16*16*16*16*16*16];
  */
 int compactar(char estado[16], bool set[16]) {
 
-  /*  for (int i = 0; i< 16; i++) {
-    std::cout << (int) estado[i]<<"  ";
-    }*/
   int res = 0;
   int p[6];
   int indice = 0;
@@ -86,16 +99,15 @@ int compactar(char estado[16], bool set[16]) {
   }
 
   for (int i = 0; i< 6; i++) {
-    //std::cout << "shifting " << (int) p[i] << std::endl;
     res = (p[i] | res) << 4;
   }
   res = res >> 4;
 
-  /*  std::cout << " : " << res << std::endl;*/
   return res;
 }
 
-
+// Determina si dada una posición del blanco en el puzzle, y un offset,
+// es posible mover el blanco a la posición del blanco sumado ese offset.
 bool puedeMoverse(int dist, int posicion_cero) {
   if (posicion_cero + dist > 15 or posicion_cero + dist < 0) return false;
 
@@ -120,8 +132,9 @@ struct NodoPat {
   char posicion_cero;
 };
 
-
-
+/*
+ * Utilizando BFS llena la base de datos dada desarmando el estado inicial dado.
+ */
 void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
 
   NodoPat* nodo_inicial = new NodoPat();
@@ -130,8 +143,6 @@ void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
   nodo_inicial->posicion_cero = 0;
 
   bd[compactar(inicial, set)] = 0;
-
-  std::cout << "inicial: " << compactar(inicial, set) << std::endl;
 
   std::queue<NodoPat*> cola;
   cola.push(nodo_inicial);
@@ -156,13 +167,11 @@ void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
 	char ficha = temp[nodo->posicion_cero + movs[i]];
 	temp[nodo->posicion_cero] = ficha;
 	temp[nodo->posicion_cero + movs[i]] = 0;
-	//	std::cout << "bla: " << (int) bd[compactar(temp, set)] << std::endl;
 	if ( bd[compactar(temp, set)] == 255 ) {
 	  NodoPat* hijo = new NodoPat();
 	  memcpy(&(hijo->estado), &temp, 16*sizeof(int8));
 	  hijo->posicion_cero = nodo->posicion_cero + movs[i];
 	  hijo->movimientos = nodo->movimientos + (ficha > 0 ? 1 : 0);
-
 	  bd[compactar(temp, set)] = hijo->movimientos;
 	  cola.push(hijo);
 	} else {
@@ -171,20 +180,21 @@ void llenarBDPat(bool set[16], int8 inicial[16], unsigned char bd[]) {
 	  bd[compactar(temp, set)] = val1 < val2 ? val1 : val2;
 	}
       }
-
     }
-
     delete nodo;
   }
 }
 
 void generarBD() {
+  // Llena la base de datos inicialmente con 'infinito'
   for (int i = 0; i < (16*16*16*16*16*16); i++) {
     bd1[i] = 255;
     bd2[i] = 255;
     bd3[i] = 255;
   }
 
+  // Si un archivo con nombre 'patrones.bd' ya existe, se carga de allí en vez
+  // de generarla. Sino, se genera y se escribe en disco.
   std::ifstream entrada("patrones.bd", std::ios::in | std::ios::binary);
   if (!entrada) {
     std::cout << "No existe la base de datos de patrones, se generará" << std::endl;
@@ -207,14 +217,23 @@ void generarBD() {
   }
 }
 
+// Matriz para heurística Manhattan.
 extern int matrizH[16][16];
 
+/*
+ * La heurística toma el estado actual, y para cada conjunto de fichas, usa su
+ * posición actual como índice en la base de datos para buscar el patrón
+ * correspondiente. Luego se suman los 3 valores obtenidos.
+ */
 int h_static555(int8 estado[16]) {
-  return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)] + bd3[compactar(estado, set3)];
+  return bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)]
+    + bd3[compactar(estado, set3)];
 }
 
 int h_static55_M(int8 estado[16]) {
+  // Busca el estado actual en dos bases de datos
   int res = bd1[compactar(estado, set1)] + bd2[compactar(estado, set2)];
+  // A eso le suma la distancia manhattan del resto de las fichas
   for (int i = 0; i < 16; i++) {
     if (!set3[i]) continue;
     for (int j = 0; j < 16; j++) {
@@ -227,6 +246,8 @@ int h_static55_M(int8 estado[16]) {
 }
 
 int h_static5_M(int8 estado[16]) {
+  // Busca el estado actual en la primera base de datos y suma la distancia
+  // manhattan del resto de las fichas.
   int res = bd1[compactar(estado, set1)];
   for (int i = 0; i < 16; i++) {
     if (set1[i]) continue;
@@ -238,30 +259,3 @@ int h_static5_M(int8 estado[16]) {
   }
   return res;
 }
-/*
-int main() {
-  generarBD();
-
-  int8 puzzle[16] = { 1, 2, 3, 7,
-		      4, 5, 6, 0,
-		      8, 9, 10, 11,
-		      12, 13, 14, 15};
-
-  int8 puzzle2[16] =
-    { 7, 15, 8, 2,
-      13, 6, 3, 12,
-      11, 0, 4, 10,
-      9, 5, 1, 14};
-
-  int8 puzzle3[16] =
-    { 4, 7, 14, 13, 10, 3, 9, 12, 11, 5, 6, 15, 1, 2, 8, 0 };
-
-  int8 puzzle4[16] =
-    { 14, 7, 8, 2, 13, 11, 10, 4, 9, 12, 5, 0, 3, 6, 1, 15};
-
-  std::cout << "H: " << h_static555(puzzle4) << std::endl;
-
-  Nodo* res = a_static555(puzzle4, 1);
-  extract_solution(res);
-}
-*/
