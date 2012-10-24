@@ -22,7 +22,8 @@ Nodo* a_conflictos(int8 estado[16], int peso);
 
 // IDA*
 std::list<Nodo*> ida_manhattan(int8 estado[16]);
-
+std::list<Nodo*> ida_conflictos(int8 estado[16]);
+std::list<Nodo*> ida_static555(int8 estado[16]);
 
 // Heurísticas
 int8 heuristica(Nodo* n);

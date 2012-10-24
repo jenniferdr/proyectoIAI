@@ -43,8 +43,8 @@ extern bool puedeMoverse(int dist, int posicion_cero);
  * en tamaño de memoria, consumiendo todos los recursos del sistema y sin
  * alcanzar una solución.
  *
- * Consideramos que para mejorar esta implantación es necesario reducir
- * el tamaño de la representación de los nodos, implantar nuestras propias
+ * Consideramos que para mejorar esta implementación es necesario reducir
+ * el tamaño de la representación de los nodos, implementar nuestras propias
  * estructuras para la cola de prioridades y conjuntos (de manera de que se
  * adapten mejor a este problema en específico), y posiblemente manejar
  * manualmente la memoria dinámica.
@@ -163,7 +163,7 @@ Nodo* a_estrella(int8 inicial[16], int peso, int (*h)(int8 inicial[16])) {
 }
 
 
-// función wrapper convenientes. Proveen la implantación de A* con heurísticas
+// función wrapper convenientes. Proveen la implementación de A* con heurísticas
 // particulares.
 Nodo* a_static555(int8 inicial[16], int peso) {
   // 3 Bases de datos de patrones disjuntas

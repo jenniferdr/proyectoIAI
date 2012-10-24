@@ -5,6 +5,7 @@
 #include<fstream>
 #include<sstream>
 
+extern int peso;
 
 int main(int argc, char *argv[]){
 
@@ -66,7 +67,7 @@ int main(int argc, char *argv[]){
       if(heuristica=="manhattan") listaResuelto= ida_manhattan(estado);
       if(heuristica=="Mconflictos") listaResuelto= ida_conflictos(estado);
       if(heuristica=="static555") listaResuelto= ida_static555(estado);
-      std::cout << " " << (int) resuelto.back()->distancia;
+      std::cout << " " << (int) listaResuelto.back()->distancia;
     }
 
     std::cout << "\n --- \n" << std::endl;
